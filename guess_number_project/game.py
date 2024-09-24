@@ -16,17 +16,20 @@ def random_predict(number: int=1) -> int:
 
     # количество попыток
     count = 0
+    #создаём минимальные и максимальные значения угадываемого числа
+    #которые будут меняться в зависимости от того, угадано число или нет
+    low, high = 1, 100
 
     predict = np.random.randint(1, 101)  # создаём случайное число, которое мы будем сравнивать  с number
 
     while number != predict: 
-        count +=1 # Запускам цикл, который повторяется до тех пор, пока условие верно
-        if number > predict: predict = math.ceil((number + predict) / 2)
-    # Если number > predict, то находим среднее арифметическое между ними и округляем вверх
-    # Через несколько попыток predict = number
-        elif number < predict: predict = round((predict + number) / 2) # в случае, если number < predict - ситуация обратная
-    # находим среднее арифметическое между 2 числами, округляя вниз и рано или поздно получим нужный результат
-        else: break
+        count += 1  # Увеличиваем количество попыток
+        if number > predict: 
+            low = predict + 1  # Сдвигаем нижнюю границу диапазона
+        elif number < predict: 
+            high = predict - 1  # Сдвигаем верхнюю границу диапазона вниз
+        predict = (low + high) // 2  # Вычисляем среднее значение между low и high для следующего предположения
+        
     return count
 print(f'Количество попыток: {random_predict()}')
 
@@ -50,7 +53,8 @@ def score_game(random_predict) -> int:
     score = int(np.mean(count_ls)) # находим среднее количество попыток
 
     print(f'Ваш алгоритм угадывает число в среднем за: {score} попыток')
-    return(score)
+    return score
 
 # RUN
-score_game(random_predict)
+if __name__ == '__main__':
+    score_game(random_predict)
